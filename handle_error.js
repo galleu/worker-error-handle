@@ -6,7 +6,6 @@ export async function handle_error(err) {
         let message = err.message || null;
         if (message === null) {
             switch (err.status) {
-                case 204: return new Response(null, { status: err.status });
                 case 400: message = "Bad Request"; break;
                 case 401: message = "Unauthorized"; break;
                 case 402: message = "Payment Required"; break;
@@ -41,11 +40,11 @@ export async function handle_error(err) {
                 case 508: message = "Loop Detected"; break;
                 case 510: message = "Not Extended"; break;
                 case 511: message = "Network Authentication Required"; break;
-                default: message = "HTTP Error Code " + err.status; break;
+                default: message = "Unknown Error Code: " + err.status; break;
             }
         };
-        console.log("Error", err);
-        console.log("Request", err.request)
+        console.error("Error", err);
+        console.error("Request", err.request)
         return new Response(message, { status: err.status, headers });
     } else {
         return new Response(err.stack, { status: 500, headers });
